@@ -23,5 +23,5 @@ type PagesController () =
         Page("Party", 3, "Jan 23 4:55PM", "#4286f4")
 
     [<HttpPost>]
-    member this.Post(name: string, date: string, color: string) =
+    member this.Post([<FromBody>] name: string, [<FromBody>] date: string, [<FromBody>] color: string) =
         Page(name, 0, date, color)
