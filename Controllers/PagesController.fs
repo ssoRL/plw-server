@@ -17,3 +17,11 @@ type PagesController () =
             Page("Party", 3, "Jan 23 4:55PM", "#4286f4")
             Page("Pipe Laying Nation", 5, "#4286f4")
         |]
+
+    [<HttpGet("{id}")>]
+    member this.Get(id: int) =
+        Page("Party", 3, "Jan 23 4:55PM", "#4286f4")
+
+    [<HttpPost>]
+    member this.Post(name: string, date: string, color: string) =
+        Page(name, 0, date, color)
