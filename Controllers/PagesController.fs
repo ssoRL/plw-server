@@ -15,12 +15,12 @@ type PagesController () =
     member this.Get() =
         [|
             Page("Party", 3, "Jan 23 4:55PM", "#4286f4")
-            Page("Pipe Laying Nation", 5, "#4286f4")
+            Page("Pipe Laying Nation", 5, "#986410")
         |]
 
     [<HttpGet("{id}")>]
     member this.Get(id: int) =
-        Page("Party", 3, "Jan 23 4:55PM", "#4286f4")
+        Page("Party", 3, "Jan 23 4:55PM", "#986410")
 
     [<HttpPost>]
     member this.Post([<FromBody>] name: string, [<FromBody>] date: string, [<FromBody>] color: string) =
