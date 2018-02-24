@@ -6,16 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Models/Page.fs" />
+    <Compile Include="Models/FeedItem.fs" />
+    <Compile Include="Models/Message.fs" />
+    <Compile Include="Models/Thread.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Providers/Feed.fs" />
+    <Compile Include="Providers/FeedsProvider.fs" />
+    <Compile Include="Providers/ThreadsProvider.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- <Compile Include="Controllers/ValuesController.fs" /> -->
-    <Compile Include="Controllers/PagesController.fs" />
+    <Compile Include="Controllers/ThreadsController.fs" />
+    <Compile Include="Controllers/FeedsController.fs" />
   </ItemGroup>
 
   <ItemGroup>
