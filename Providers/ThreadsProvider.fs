@@ -40,11 +40,18 @@ module ThreadsProvider =
         // Result
         Thread(threadName, messages)
 
+
     let CreateThread (name: string option) =
         use conn = new NpgsqlConnection(connString)
         conn.Open()
 
-        let now = DateTime.Now()
-        createCmd =
+        let now = DateTime.Now.ToString("u")
+        let createCmdString =
             match name with
-            | Some threadName -> sprintf "INSERT INTO thread(name, last_update) VALUES (?, ?)"
+            | Some threadName ->
+                sprintf 
+                    "INSERT INTO thread(name, last_update) VALUES ('%s', '%s') RETURNING id"
+                    threadName now
+            | None -> sprintf "INSERT INTO thread(name, last_update) VALUES ('New Thread', '%s') RETURNING id" now
+        let createCmd = new NpgsqlCommand(createCmdString, conn)
+        createCmd.ExecuteScalar() :?> Int64

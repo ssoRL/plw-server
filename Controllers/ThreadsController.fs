@@ -1,10 +1,7 @@
 ﻿namespace PLW.Controllers
 
-open System
-open System.Collections.Generic
-open System.Linq
-open System.Threading.Tasks
 open Microsoft.AspNetCore.Mvc
+open PLW.Providers.ThreadsProvider
 
 [<Route("api/[controller]")>]
 type ThreadsController () =
@@ -12,8 +9,8 @@ type ThreadsController () =
 
     [<HttpGet("{id}")>]
     member this.Get(id:int) =
-        "value"
+        GetThread(id)
 
     [<HttpPost>]
-    member this.Post([<FromBody>]value:string) =
-        ()
+    member this.Post([<FromBody>]name:string) =
+        CreateThread(Some name)

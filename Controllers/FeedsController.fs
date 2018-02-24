@@ -1,7 +1,7 @@
 namespace PLW.Controllers
 
 open Microsoft.AspNetCore.Mvc
-open PLW.Providers
+open PLW.Providers.FeedsProvider
 
 [<Route("api/[controller]")>]
 type FeedsController () =
@@ -9,4 +9,4 @@ type FeedsController () =
 
     [<HttpGet>]
     member this.Get() =
-        Feed.GetFeed(3)
+        GetFeed(3)
