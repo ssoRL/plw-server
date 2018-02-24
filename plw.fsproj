@@ -10,6 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Providers/Feed.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- <Compile Include="Controllers/ValuesController.fs" /> -->
     <Compile Include="Controllers/PagesController.fs" />
   </ItemGroup>
@@ -22,6 +26,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.0.1" />
+    <PackageReference Include="Npgsql" Version="3.2.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.1.0" />
   </ItemGroup>
 

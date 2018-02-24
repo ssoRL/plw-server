@@ -5,10 +5,7 @@ namespace PLW.Models
 //     | MessageGroup of string * int
 
 open Microsoft.CodeAnalysis
-type Page(name: string, notifications: int, date: string, color: string) =
-    new (name: string, notifications: int, color: string) =
-        Page (name, notifications, null, color)
+
+type FeedItem(name: string, notifications: int) =
     member this.Name = name
     member this.Notifications = notifications
-    member this.Date = date
-    member this.Color = color
