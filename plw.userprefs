@@ -1,10 +1,13 @@
 ﻿<Properties StartupConfiguration="{A188BD79-DF3B-45D2-8596-2CAC882BAF15}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/FeedsController.fs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="server Status">
     <Files>
-      <File FileName="Models/Thread.fs" Line="1" Column="1" />
-      <File FileName="Providers/ThreadsProvider.fs" Line="23" Column="69" />
-      <File FileName="Controllers/ThreadsController.fs" Line="15" Column="45" />
-      <File FileName="Controllers/FeedsController.fs" Line="12" Column="9" />
+      <File FileName="Controllers/FeedsController.fs" Line="9" Column="5" />
+      <File FileName="Providers/FeedsProvider.fs" Line="7" Column="93" />
+      <File FileName="Models/FeedItem.fs" Line="3" Column="12" />
+      <File FileName="Controllers/ThreadsController.fs" Line="20" Column="37" />
+      <File FileName="Providers/ThreadsProvider.fs" Line="51" Column="1" />
+      <File FileName="Models/Thread.fs" Line="10" Column="2" />
+      <File FileName="server Status" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

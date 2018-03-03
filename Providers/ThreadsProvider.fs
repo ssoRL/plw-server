@@ -7,38 +7,44 @@ open System
 module ThreadsProvider =
     let connString = "Host=localhost;Port=5432;Username=postgres;Password=plw;Database=plw";
 
-    let GetThread (threadId:int) =
-        use conn = new NpgsqlConnection(connString)
-        conn.Open()
-
-        // Get the thread info
+    let private GetThreadInfo (conn: NpgsqlConnection, threadId: int64) =
         let selectThread = sprintf "SELECT name, last_update FROM thread WHERE id=%i" threadId
         use threadCmd = new NpgsqlCommand(selectThread, conn)
         use threadReader = threadCmd.ExecuteReader()
         printfn "fields: %d" threadReader.FieldCount
-        let threadName =
-            if threadReader.FieldCount = 1
-            then
-                threadReader.Read() |> ignore
-                threadReader.GetString(threadReader.GetOrdinal("name"))
-            else "Hi"
+        if threadReader.FieldCount = 1
+        then
+            threadReader.Read() |> ignore
+            (
+                threadReader.GetString(threadReader.GetOrdinal("name")),
+                threadReader.GetDateTime(threadReader.GetOrdinal("last_update"))
+            )
+        else failwith (sprintf "Could not find a thread with id=%i" threadId)
 
-        // Get the messages associated with the thread
+    let private GetThreadMessages (conn: NpgsqlConnection, threadId: int64) =
         let selectMessages = sprintf "SELECT user_id, message, time FROM message WHERE thread_id=%i" threadId
         use msgCmd = new NpgsqlCommand(selectMessages, conn)
         use msgReader = msgCmd.ExecuteReader()
         printfn "fields: %d" msgReader.FieldCount
-        let messages =
-            [while msgReader.Read() do
-                yield Message(
-                    msgReader.GetInt64(msgReader.GetOrdinal("user_id")),
-                    msgReader.GetString(msgReader.GetOrdinal("message")),
-                    msgReader.GetDateTime(msgReader.GetOrdinal("time"))
-                )
+        [while msgReader.Read() do
+            yield Message(
+                msgReader.GetInt64(msgReader.GetOrdinal("user_id")),
+                msgReader.GetString(msgReader.GetOrdinal("message")),
+                msgReader.GetDateTime(msgReader.GetOrdinal("time"))
+            )
         ]
 
-        // Result
-        Thread(threadName, messages)
+    let GetThread (threadId:int64) =
+        use conn = new NpgsqlConnection(connString)
+        conn.Open()
+
+        let (threadName, lastUpdate) = GetThreadInfo(conn, threadId)
+        {
+            Id = threadId;
+            Name = threadName;
+            LastUpdate = lastUpdate;
+            Messages = GetThreadMessages(conn, threadId)
+        }
 
 
     let CreateThread (name: string option) =

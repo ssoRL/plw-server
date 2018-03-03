@@ -9,9 +9,14 @@ module FeedsProvider =
     let GetFeed (_userId:int) =
         use conn = new NpgsqlConnection(connString)
         conn.Open()
-        use cmd = new NpgsqlCommand("SELECT name, last_update FROM thread", conn)
+
+        use cmd = new NpgsqlCommand("SELECT id, name, last_update FROM thread", conn)
         use reader = cmd.ExecuteReader()
         printfn "fields: %d" reader.FieldCount
         [while reader.Read() do
-                yield FeedItem(reader.GetString(reader.GetOrdinal("name")), 1)
+            yield{
+                Id = reader.GetInt64(reader.GetOrdinal("id"))
+                Name = reader.GetString(reader.GetOrdinal("name"))
+                LastUpdate = reader.GetDateTime(reader.GetOrdinal("last_update"))
+            }
         ]
