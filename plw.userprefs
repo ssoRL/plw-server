@@ -4,9 +4,14 @@
       <File FileName="Controllers/FeedsController.fs" Line="9" Column="5" />
       <File FileName="Providers/FeedsProvider.fs" Line="7" Column="93" />
       <File FileName="Models/FeedItem.fs" Line="3" Column="12" />
-      <File FileName="Controllers/ThreadsController.fs" Line="20" Column="37" />
-      <File FileName="Providers/ThreadsProvider.fs" Line="51" Column="1" />
-      <File FileName="Models/Thread.fs" Line="10" Column="2" />
+      <File FileName="Controllers/ThreadsController.fs" Line="17" Column="37" />
+      <File FileName="Providers/ThreadsProvider.fs" Line="26" Column="1" />
+      <File FileName="Providers/MessagesProvider.fs" Line="24" Column="73" />
+      <File FileName="Controllers/MessagesController.fs" Line="11" Column="17" />
+      <File FileName="Models/Message.fs" Line="16" Column="2" />
+      <File FileName="Program.fs" Line="25" Column="1" />
+      <File FileName="Startup.fs" Line="54" Column="45" />
+      <File FileName="HttpCodedException.fs" Line="5" Column="29" />
       <File FileName="server Status" />
     </Files>
   </MonoDevelop.Ide.Workbench>

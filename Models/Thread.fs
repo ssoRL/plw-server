@@ -8,3 +8,7 @@ type Thread = {
     LastUpdate: DateTime;
     Messages: Message list;
 }
+
+type ThreadPost = {
+    name: string;
+}

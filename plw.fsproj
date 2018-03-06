@@ -9,11 +9,14 @@
     <Compile Remove="Providers\DatabaseConnectionProvider.fs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HttpCodedException.fs" />
     <Compile Include="Models/FeedItem.fs" />
     <Compile Include="Models/Message.fs" />
     <Compile Include="Models/Thread.fs" />
     <Compile Include="Providers/FeedsProvider.fs" />
+    <Compile Include="Providers\MessagesProvider.fs" />
     <Compile Include="Providers/ThreadsProvider.fs" />
+    <Compile Include="Controllers\MessagesController.fs" />
     <Compile Include="Controllers/ThreadsController.fs" />
     <Compile Include="Controllers/FeedsController.fs" />
     <Compile Include="Startup.fs" />

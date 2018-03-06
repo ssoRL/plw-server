@@ -5,7 +5,9 @@ open System.Collections.Generic
 open System.Linq
 open System.Threading.Tasks
 open Microsoft.AspNetCore.Builder
+open Microsoft.AspNetCore.Diagnostics
 open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Swashbuckle.AspNetCore
@@ -28,6 +30,30 @@ type Startup private () =
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) = 
+        //app.Use(fun context next ->
+                //    async { 
+                //        try
+                //            next.Invoke() |> Async.AwaitTask
+                //        with
+                //            | HttpCodedException (code, message) ->
+                //                printfn "code: %i, msg: %s" (int code) message
+                //                context.Response.StatusCode <- int code
+                //                context.Response.WriteAsync(message) |> ignore
+                //    } |> Async.StartAsTask :> Task
+                //) |> ignore
+        app.UseExceptionHandler(
+            fun options ->
+                options.Run(
+                    fun context ->
+                        let ex = context.Features.Get<IExceptionHandlerFeature>()
+                        match ex.Error with
+                        | HttpCodedException (code, message) ->
+                             printfn "code: %i, msg: %s" (int code) message
+                             context.Response.StatusCode <- int code
+                             context.Response.WriteAsync(message)
+                        | exn -> raise (exn)
+                )
+        ) |> ignore
         let cors = Action<CorsPolicyBuilder> (fun builder -> builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod() |> ignore)
         app.UseCors(cors) |> ignore
 

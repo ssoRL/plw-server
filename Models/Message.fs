@@ -2,8 +2,15 @@ namespace PLW.Models
 
 open System
 
-type Message(user: int64, content: string, time: DateTime) =
-    member this.UserId = user
-    member this.Content = content
+type Message = {
+    User: int64
+    Thread: int64
+    Content: string
+    Time: DateTime
+}
 
-    member this.PostTime = time
+type MessagePost = {
+    UserId: int64
+    ThreadId: int64
+    Content: string
+}

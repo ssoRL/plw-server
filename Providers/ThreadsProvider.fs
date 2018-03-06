@@ -1,8 +1,11 @@
 namespace PLW.Providers
 
 open Npgsql
+open PLW
 open PLW.Models
 open System
+open System.Net
+open PLW.Providers.MessagesProvider
 
 module ThreadsProvider =
     let connString = "Host=localhost;Port=5432;Username=postgres;Password=plw;Database=plw";
@@ -19,32 +22,23 @@ module ThreadsProvider =
                 threadReader.GetString(threadReader.GetOrdinal("name")),
                 threadReader.GetDateTime(threadReader.GetOrdinal("last_update"))
             )
-        else failwith (sprintf "Could not find a thread with id=%i" threadId)
-
-    let private GetThreadMessages (conn: NpgsqlConnection, threadId: int64) =
-        let selectMessages = sprintf "SELECT user_id, message, time FROM message WHERE thread_id=%i" threadId
-        use msgCmd = new NpgsqlCommand(selectMessages, conn)
-        use msgReader = msgCmd.ExecuteReader()
-        printfn "fields: %d" msgReader.FieldCount
-        [while msgReader.Read() do
-            yield Message(
-                msgReader.GetInt64(msgReader.GetOrdinal("user_id")),
-                msgReader.GetString(msgReader.GetOrdinal("message")),
-                msgReader.GetDateTime(msgReader.GetOrdinal("time"))
-            )
-        ]
+        else 
+            let message = sprintf "Could not find a thread with id=%i" threadId
+            raise (HttpCodedException (HttpStatusCode.NotFound, message))
 
     let GetThread (threadId:int64) =
         use conn = new NpgsqlConnection(connString)
         conn.Open()
 
         let (threadName, lastUpdate) = GetThreadInfo(conn, threadId)
-        {
+        let messages = GetMessagesByThreadId(conn, threadId)
+        let thread = {
             Id = threadId;
             Name = threadName;
             LastUpdate = lastUpdate;
-            Messages = GetThreadMessages(conn, threadId)
+            Messages = messages;
         }
+        thread
 
 
     let CreateThread (name: string option) =

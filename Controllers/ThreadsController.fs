@@ -2,10 +2,7 @@
 
 open Microsoft.AspNetCore.Mvc
 open PLW.Providers.ThreadsProvider
-
-type postData = {
-    name: string;
-}
+open PLW.Models
 
 [<Route("api/[controller]")>]
 type ThreadsController () =
@@ -16,5 +13,5 @@ type ThreadsController () =
         GetThread(id)
 
     [<HttpPost>]
-    member this.Post([<FromBody>]data: postData) = 
+    member this.Post([<FromBody>]data: ThreadPost) = 
         CreateThread(Some data.name)
