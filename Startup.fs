@@ -13,6 +13,9 @@ open Microsoft.Extensions.DependencyInjection
 open Swashbuckle.AspNetCore
 open System.Collections
 open Microsoft.AspNetCore.Cors.Infrastructure
+open Microsoft.IdentityModel.Tokens;
+open System.Text;
+open Microsoft.AspNetCore.Authentication.JwtBearer
 
 type Startup private () =
     new (configuration: IConfiguration) as this =
@@ -25,22 +28,21 @@ type Startup private () =
         services.AddCors() |> ignore
         services.AddMvc() |> ignore
         services.AddSwaggerGen (fun c -> c.SwaggerDoc("v1", Swagger.Info()))  |> ignore
-        //(c => c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" })) 
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, fun options ->
+            options.TokenValidationParameters = TokenValidationParameters (
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret that needs to be at least 16 characeters long for HmacSha256")), 
+                ValidateLifetime = true, //validate the expiration and not before values in the token
+                ClockSkew = TimeSpan.FromMinutes(5.0) //5 minute tolerance for the expiration date
+            ) |> ignore
+        ) |> ignore
 
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) = 
-        //app.Use(fun context next ->
-                //    async { 
-                //        try
-                //            next.Invoke() |> Async.AwaitTask
-                //        with
-                //            | HttpCodedException (code, message) ->
-                //                printfn "code: %i, msg: %s" (int code) message
-                //                context.Response.StatusCode <- int code
-                //                context.Response.WriteAsync(message) |> ignore
-                //    } |> Async.StartAsTask :> Task
-                //) |> ignore
+    member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
         app.UseExceptionHandler(
             fun options ->
                 options.Run(
@@ -54,6 +56,7 @@ type Startup private () =
                         | exn -> raise (exn)
                 )
         ) |> ignore
+        app.UseAuthentication() |> ignore 
         let cors = Action<CorsPolicyBuilder> (fun builder -> builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod() |> ignore)
         app.UseCors(cors) |> ignore
 

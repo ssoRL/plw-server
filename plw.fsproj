@@ -13,17 +13,22 @@
     <Compile Include="Models/FeedItem.fs" />
     <Compile Include="Models/Message.fs" />
     <Compile Include="Models/Thread.fs" />
+    <Compile Include="Models\Auth.fs" />
     <Compile Include="Providers/FeedsProvider.fs" />
     <Compile Include="Providers\MessagesProvider.fs" />
     <Compile Include="Providers/ThreadsProvider.fs" />
+    <Compile Include="Providers\AuthProvider.fs" />
     <Compile Include="Controllers\MessagesController.fs" />
     <Compile Include="Controllers/ThreadsController.fs" />
     <Compile Include="Controllers/FeedsController.fs" />
+    <Compile Include="Controllers\AuthController.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.0.1" />
     <PackageReference Include="Npgsql" Version="3.2.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.2.1" />
   </ItemGroup>
 </Project>

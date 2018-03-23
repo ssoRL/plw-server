@@ -1,5 +1,6 @@
 namespace PLW.Controllers
 
+open Microsoft.AspNetCore.Authorization
 open Microsoft.AspNetCore.Mvc
 open PLW.Providers.FeedsProvider
 
@@ -7,6 +8,6 @@ open PLW.Providers.FeedsProvider
 type FeedsController () =
     inherit Controller()
 
-    [<HttpGet>]
+    [<HttpGet; Authorize>]
     member this.Get() =
         GetFeed(3)

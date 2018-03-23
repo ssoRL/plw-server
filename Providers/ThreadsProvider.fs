@@ -15,7 +15,7 @@ module ThreadsProvider =
         use threadCmd = new NpgsqlCommand(selectThread, conn)
         use threadReader = threadCmd.ExecuteReader()
         printfn "fields: %d" threadReader.FieldCount
-        if threadReader.FieldCount = 1
+        if threadReader.FieldCount > 0
         then
             threadReader.Read() |> ignore
             (
