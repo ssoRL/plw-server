@@ -24,21 +24,26 @@ type Startup private () =
 
     // This method gets called by the runtime. Use this method to add services to the container.
     member this.ConfigureServices(services: IServiceCollection) =
-        // Add framework services.
-        services.AddCors() |> ignore
-        services.AddMvc() |> ignore
-        services.AddSwaggerGen (fun c -> c.SwaggerDoc("v1", Swagger.Info()))  |> ignore
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, fun options ->
-            options.TokenValidationParameters = TokenValidationParameters (
+        // Add framework services
+        services.AddAuthentication(fun options ->
+            options.DefaultScheme <- JwtBearerDefaults.AuthenticationScheme
+            options.DefaultAuthenticateScheme <- JwtBearerDefaults.AuthenticationScheme 
+            options.DefaultChallengeScheme <- JwtBearerDefaults.AuthenticationScheme
+        ).AddJwtBearer(fun options ->
+            options.TokenValidationParameters <- TokenValidationParameters (
                 ValidateAudience = false,
                 ValidateIssuer = false,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret that needs to be at least 16 characeters long for HmacSha256")), 
-                ValidateLifetime = true, //validate the expiration and not before values in the token
-                ClockSkew = TimeSpan.FromMinutes(5.0) //5 minute tolerance for the expiration date
-            ) |> ignore
+                ValidateIssuerSigningKey = false,
+                IssuerSigningKey = SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret that needs to be at least 16 characeters long for HmacSha256")), 
+                ValidateLifetime = false, //validate the expiration and not before values in the token
+                ClockSkew = TimeSpan.FromMinutes(5.0), //5 minute tolerance for the expiration date
+                ValidateActor = false,
+                ValidateTokenReplay = false
+            )
         ) |> ignore
+        services.AddMvc() |> ignore
+        services.AddSwaggerGen (fun c -> c.SwaggerDoc("v1", Swagger.Info()))  |> ignore
+        services.AddCors() |> ignore
 
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,13 +61,19 @@ type Startup private () =
                         | exn -> raise (exn)
                 )
         ) |> ignore
+
+        // let cors = Action<CorsPolicyBuilder> (fun builder -> builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod() |> ignore)
+        app.UseCors(fun policy ->
+            policy.AllowAnyHeader()
+                    .AllowAnyOrigin()
+                    .AllowCredentials()
+                    .AllowAnyMethod()
+                    .Build() |> ignore
+        ) |> ignore
+
         app.UseAuthentication() |> ignore 
-        let cors = Action<CorsPolicyBuilder> (fun builder -> builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod() |> ignore)
-        app.UseCors(cors) |> ignore
 
         app.UseMvc() |> ignore
-
-        app.UseSwagger() |> ignore
 
 
     member val Configuration : IConfiguration = null with get, set

@@ -16,8 +16,8 @@ module AuthProvider =
     let GenerateToken (username) =
         let claims = [|
             Claim (ClaimTypes.Name, username)
-            Claim (ClaimTypes.Version, "1")
-            Claim (ClaimTypes.Expiration, DateTimeOffset(DateTime.Now.AddDays(1.0)).ToUnixTimeSeconds().ToString())
+            Claim (JwtRegisteredClaimNames.Exp, DateTimeOffset(DateTime.Now.AddDays(1.0)).ToUnixTimeSeconds().ToString())
+            Claim (JwtRegisteredClaimNames.Nbf, DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString())
         |]
         let cred =
             new SigningCredentials(

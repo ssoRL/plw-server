@@ -3,6 +3,7 @@ namespace PLW.Controllers
 open Microsoft.AspNetCore.Authorization
 open Microsoft.AspNetCore.Mvc
 open PLW.Providers.FeedsProvider
+open Microsoft.AspNetCore.Authentication.JwtBearer
 
 [<Route("api/[controller]")>]
 type FeedsController () =
