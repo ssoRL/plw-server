@@ -5,9 +5,10 @@ open System.Net
 open Microsoft.AspNetCore.Mvc
 open PLW.Providers.AuthProvider
 open PLW.Models
+open Microsoft.AspNetCore.Identity
 
 [<Route("api/[controller]")>]
-type AuthController () =
+type AuthController (userManager: UserManager<IdentityUser>, signInManager:SignInManager<IdentityUser>) =
     inherit Controller()
 
     [<HttpPost>]

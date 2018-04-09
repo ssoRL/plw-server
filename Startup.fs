@@ -16,6 +16,12 @@ open Microsoft.AspNetCore.Cors.Infrastructure
 open Microsoft.IdentityModel.Tokens;
 open System.Text;
 open Microsoft.AspNetCore.Authentication.JwtBearer
+open Microsoft.AspNetCore.Identity
+open Microsoft.Extensions.Configuration
+open Microsoft.Extensions.DependencyInjection
+open Microsoft.Extensions.Logging
+open Microsoft.Extensions.Options
+open Microsoft.IdentityModel.Tokens
 
 type Startup private () =
     new (configuration: IConfiguration) as this =
@@ -35,19 +41,21 @@ type Startup private () =
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = false,
                 IssuerSigningKey = SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret that needs to be at least 16 characeters long for HmacSha256")), 
-                ValidateLifetime = false, //validate the expiration and not before values in the token
-                ClockSkew = TimeSpan.FromMinutes(5.0), //5 minute tolerance for the expiration date
-                ValidateActor = false,
-                ValidateTokenReplay = false
+                ValidateLifetime = true, //validate the expiration and not before values in the token
+                ClockSkew = TimeSpan.FromMinutes(1.0) //5 minute tolerance for the expiration date
             )
         ) |> ignore
+        services.AddDbContext<ApplicationDbContext>() |> ignore
+        services.AddIdentity<IdentityUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders() |> ignore
         services.AddMvc() |> ignore
         services.AddSwaggerGen (fun c -> c.SwaggerDoc("v1", Swagger.Info()))  |> ignore
         services.AddCors() |> ignore
 
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
+    member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment, dbContext: ApplicationDbContext) =
         app.UseExceptionHandler(
             fun options ->
                 options.Run(
@@ -74,6 +82,8 @@ type Startup private () =
         app.UseAuthentication() |> ignore 
 
         app.UseMvc() |> ignore
+
+        dbContext.Database.EnsureCreated() |> ignore
 
 
     member val Configuration : IConfiguration = null with get, set
